@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REDIKS - Gerçekliği Her Şekilde Reddediyoruz </title>
+  <!-- CSS Dosyasını Bağlıyoruz -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <!-- 1. SOL SÜTUN: Menü ve Başlık -->
+  <aside class="sidebar-left">
+    <h1 class="logo">REDİKS</h1>
+    <p class="tagline">Gerçekliği Her Şekilde Reddediyoruz</p>
+  </aside>
+
+  <!-- 2. ORTA SÜTUN: Gönderi Yazma ve Akış -->
+  <main class="feed-area">
+    <!-- Red Yazma Kutusu -->
+    <section class="create-post">
+      <textarea id="post-input" placeholder="Neyi reddediyorsun? (Örn: Bugün havanın yağmurlu olmasını reddediyorum)"></textarea>
+      <button id="btn-submit" class="btn-reddet">Reddet!</button>
+    </section>
+
+    <!-- Gönderilerin Dizileceği Akış Listesi -->
+    <section id="feed" class="feed-list">
+      <!-- Örnek Gönderi Kartı -->
+      <article class="post-card">
+        <div class="post-header">
+          <span class="author">NilBabaPro #33</span>
+          <span class="time">Az önce</span>
+        </div>
+        <p class="post-text">Bugün topluluk etkinliğinde hiçbir işe yaramayanları reddediyorum</p>
+        <div class="post-actions">
+          <button class="btn-reject">Ben de Reddediyorum (<span class="count">42</span>)</button>
+          <button class="btn-accept">Kabullen</button>
+        </div>
+        <!-- Kırmızı Mühür Katmanı -->
+        <div class="stamp">REDDEDİLDİ</div>
+      </article>
+    </section>
+  </main>
+
+  <!-- 3. SAĞ SÜTUN: Gündem ve Trendler -->
+  <aside class="sidebar-right">
+    <div class="trends-card">
+      <h3>Günün En Çok Reddedilenleri</h3>
+      <ul>
+        <li>#YağmurluHava <span>(1.420 red)</span></li>
+        <li>#PazartesiGünü <span>(980 red)</span></li>
+        <li>#KütleÇekimi <span>(512 red)</span></li>
+      </ul>
+    </div>
+  </aside>
+</div>
+  <!-- 2. Gün buraya butonlar ve kutular gelecek -->
+
+  <!-- JavaScript Dosyasını Bağlıyoruz -->
+  <script src="script.js"></script>
+</body>
+</html>
