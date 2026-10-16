@@ -1,4 +1,10 @@
 
+const SUPABASE_URL = "https://rflqkmwjjccuvgccpizd.supabase.co";
+const SUPABASE_KEY = "sb_publishable_TYjFEBx5wAG12h5FVTORQA_lhW-ifAS ";
+const db= window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+
 // 1. ADIM: Web Audio API ile harici dosya olmadan tok ahşap damga sesi üretme
 function damgaSesiCal() {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -25,7 +31,7 @@ const btnSubmit = document.getElementById("btn-submit");
 const feed = document.getElementById("feed");
 
 // 3. ADIM: "Reddet!" butonuna basıldığında yeni gönderi kartı oluşturma
-btnSubmit.addEventListener("click", () => {
+btnSubmit.addEventListener("click", async () => {
   const metin = postInput.value.trim();
 
   // Kutu boşsa uyarı ver
@@ -33,6 +39,11 @@ btnSubmit.addEventListener("click", () => {
     alert("Reddedecek bir şeyler yazmalısın!");
     return;
   }
+
+  // Buluta kaydet
+  await db.from("posts").insert([
+    { author: `Anonim İnkarcı #${Math.floor(Math.random() * 900) + 100}`, content: metin, reject_count: 1 }
+  ]);
 
   // Yeni kartı oluştur
   const yeniKart = document.createElement("article");
@@ -55,28 +66,82 @@ btnSubmit.addEventListener("click", () => {
   postInput.value = "";
 });
 
-// 4. ADIM: Akıştaki buton tıklamalarını dinleme (Bahsettiğin 2 numaralı kısım burası)
-feed.addEventListener("click", (e) => {
+// Akıştaki buton tıklamalarını dinleme
+feed.addEventListener("click", async (e) => {
   // A) "Ben de Reddediyorum" butonuna tıklandıysa:
   if (e.target.closest(".btn-reject")) {
     const kart = e.target.closest(".post-card");
+    const postId = kart.dataset.id; // Kartın veritabanındaki ID numarası
     const sayac = kart.querySelector(".count");
     const damga = kart.querySelector(".stamp");
 
-    // 1 numarada tanımladığımız ahşap damga sesini patlatıyoruz
+    // Damga sesi ve animasyonlar
     damgaSesiCal();
+    const yeniSayi = parseInt(sayac.textContent) + 1;
+    sayac.textContent = yeniSayi;
 
-    // Sayacı 1 artırıyoruz
-    sayac.textContent = parseInt(sayac.textContent) + 1;
-
-    // Kırmızı damgayı ekrana vurup kartı titretiyoruz
     damga.classList.add("active");
     kart.classList.add("shake");
     setTimeout(() => kart.classList.remove("shake"), 300);
+
+    // === VERİTABANINDA SAYACI GÜNCELLEME ===
+    if (postId) {
+      await db
+        .from("posts")
+        .update({ reject_count: yeniSayi })
+        .eq("id", postId);
+    }
   }
 
-  // B) Yasaklı "Kabullen" butonuna tıklandıysa:
+  // B) "Kabullen" butonuna tıklandıysa:
   if (e.target.closest(".btn-accept")) {
     alert("DİKKAT: GERÇEKLİK İHLALİ!\n\nBu sitede gerçekleri kabullenmek 2754 sayılı NilveMub Kanununca yasaktır!");
   }
 });
+
+// Sayfa açıldığında Supabase'teki postları ekrana bas
+async function postlariYukle() {
+  const { data } = await supabase.from("posts").select("*").order("created_at", { ascending: false });
+  if (data && data.length > 0) {
+    feed.innerHTML = "";
+    data.forEach(p => {
+      feed.innerHTML += `
+        <article class="post-card">
+          <div class="post-header"><span class="author">${p.author}</span></div>
+          <p class="post-text">${p.content}</p>
+          <div class="post-actions">
+            <button class="btn-reject">Ben de Reddediyorum (<span class="count">${p.reject_count}</span>)</button>
+            <button class="btn-accept">Kabullen</button>
+          </div>
+          <div class="stamp" style="display: none;">REDDEDİLDİ</div>
+        </article>`;
+    });
+  }
+}
+postlariYukle();
+
+
+// Sayfa açıldığında Supabase'teki postları ekrana bas
+async function postlariYukle() {
+  const { data } = await db.from("posts").select("*").order("created_at", { ascending: false });
+  
+  if (data && data.length > 0) {
+    feed.innerHTML = "";
+    data.forEach(p => {
+      feed.innerHTML += `
+        <article class="post-card" data-id="${p.id}">
+          <div class="post-header">
+            <span class="author">${p.author}</span>
+            <span class="time">${new Date(p.created_at).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}</span>
+          </div>
+          <p class="post-text">${p.content}</p>
+          <div class="post-actions">
+            <button class="btn-reject">Ben de Reddediyorum (<span class="count">${p.reject_count}</span>)</button>
+            <button class="btn-accept">Kabullen</button>
+          </div>
+          <div class="stamp" style="display: none;">REDDEDİLDİ</div>
+        </article>`;
+    });
+  }
+}
+postlariYukle();
