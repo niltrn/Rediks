@@ -36,7 +36,7 @@ btnSubmit.addEventListener("click", async () => {
 
   // Kutu boşsa uyarı ver
   if (metin === "") {
-    alert("Reddedecek bir şeyler yazmalısın!");
+    alert("Mutlaka reddedecek bir şeylerin olmalı!!");
     return;
   }
 

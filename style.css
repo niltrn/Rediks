@@ -51,6 +51,7 @@ body {
 }
 
 .create-post {
+  position:relative;
   border-bottom: 1px solid #2f3336;
   padding-bottom: 16px;
   margin-bottom: 20px;
@@ -58,7 +59,7 @@ body {
 
 #post-input {
   width: 100%;
-  height: 80px;
+  height: 150px;
   background-color: transparent;
   border: none;
   outline: none;
@@ -68,14 +69,15 @@ body {
 }
 
 .btn-reddet {
+  position: absolute; /* Kutunun içinde istediğimiz yere koymamızı sağlar */
+  right: 15px;       /* Sağ kenardan içeride durur */
+  bottom: 25px;      /* Alt kenardan bir tık yukarıda (yani kutunun içinde) durur */
   background-color: #e50914;
   color: #ffffff;
   border: none;
   padding: 8px 20px;
   border-radius: 9999px;
   font-weight: bold;
-  cursor: pointer;
-  float: right;
 }
 
 
@@ -126,15 +128,15 @@ body {
 }
 
 .btn-accept {
-  background-color: transparent;
-  border: 1px solid #333333;
-  color: #71767b;
+  background-color: #3b7143; /* Canlı bir yeşil renk */
+  border: 1px solid #0be52b;
+  color: #0be52b;            /* Yazı rengi beyaz */
   padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: bold;
 }
-
 
 .stamp {
   position: absolute;
